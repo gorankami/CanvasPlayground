@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Crtamo malo...</title>
+        <style>
+            .colors
+            {
+                float: left;
+                width:50px;
+                height:50px;
+            }
+            
+            #pallette {
+                width: 50%;
+                margin: 0 auto;
+            }
+        </style>
+	</head>
+	<body bgcolor="#EEEEEE" style="text-align:center">
+        <button type="button" onclick="resetCanvas();">Reset image</button> <span>Hint: on right click menu you can save the image</span><br />
+		<canvas id="canvas" width="500px" height="500px"></canvas><br />
+        <div id="pallette">
+            <span style=" float: left;">Pick a color:</span>
+            <div class="colors" ></div>
+            <div class="colors" style="background-color:Black; " onclick="setStrokeColor('Black');"></div>
+            <div class="colors" style="background-color:White; " onclick="setStrokeColor('White');"></div>
+            <div class="colors" style="background-color:Red;   " onclick="setStrokeColor('Red');"></div>
+            <div class="colors" style="background-color:Yellow;" onclick="setStrokeColor('Yellow');"></div>
+            <div class="colors" style="background-color:Blue;  " onclick="setStrokeColor('Blue');"></div>
+        </div>
+		<script>
+			var canvas = document.getElementById("canvas");
+			var c = canvas.getContext("2d");
+			resetCanvas();
+			var strokeColor = "Black";
+			function resetCanvas() {
+			    c.fillStyle = "#FFFFFF";
+			    c.fillRect(0, 0, 500, 500);
+			    c.fillStyle = "#000000";
+			    c.strokeStyle = strokeColor;
+			}
+			function setStrokeColor(color) {
+			    strokeColor = color;
+			    c.strokeStyle = color;
+			}
+			var isMouseDown = false;
+			canvas.addEventListener("mousedown", function (e) {
+			    e.preventDefault();
+			    if (event.button === 0) {
+			        isMouseDown = true;
+			        var cs = canvasCoords(canvas, e.clientX, e.clientY);
+			        c.beginPath();
+			        c.moveTo(cs.x, coords.y);
+			        c.lineTo(cs.x, cs.y);
+			        c.stroke();
+			    }
+			});
+
+			canvas.addEventListener("mousemove", function (e) {
+			    if (isMouseDown) {
+			        var cs = canvasCoords(canvas, e.clientX, e.clientY);
+			        c.lineTo(cs.x, cs.y);
+			        c.stroke();
+			    }
+			});
+
+			canvas.addEventListener("mouseout", function (e) {
+			    isMouseDown = false;
+			});
+
+			canvas.addEventListener("mouseup", function (e) {
+			    isMouseDown = false;
+			});
+
+
+
+			function canvasCoords(canvas, clientX, clientY) {
+			    var bbox = canvas.getBoundingClientRect();
+			    var canvasX = clientX - bbox.left * (canvas.width / bbox.width);
+			    var canvasY = clientY - bbox.top * (canvas.height / bbox.height);
+			    return { x: canvasX, y: canvasY };
+			}
+		</script>
+	</body>
+</html>
